@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>联系与留言 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="contact">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>联系与留言</h1>
+        <p>动态留言板示例：使用 DOM 增删改 + localStorage 持久化。</p>
+      </div>
+
+      <section class="two-col" id="message-board">
+        <div class="card pad">
+          <div class="panel-title">我要留言</div>
+          <form class="form" data-role="msg-form">
+            <div class="field">
+              <label>昵称</label>
+              <input name="name" placeholder="可选：不填则为匿名" />
+            </div>
+            <div class="field">
+              <label>留言内容</label>
+              <textarea name="content" placeholder="请输入你的建议、反馈或想法..." required></textarea>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn primary" type="submit">发布留言</button>
+              <a class="btn" href="../index.html">回首页</a>
+            </div>
+          </form>
+          <div class="notice" style="margin-top:12px;">
+            <strong>说明：</strong>留言列表支持点赞、回复（快捷文本）、删除，全部操作都将实时更新 DOM 并写入 localStorage。
+          </div>
+        </div>
+
+        <div class="card pad">
+          <div class="panel-title">留言列表（共 <span data-role="msg-count">0</span> 条）</div>
+          <div data-role="msg-list" style="margin-top:12px;"></div>
+          <div class="notice" style="margin-top:12px;">
+            <strong>快捷回复（演示客服）：</strong>
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+              <input data-role="quick-reply" placeholder="输入一段客服回复..." style="flex:1; padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06);" />
+              <button class="btn" type="button" data-role="quick-send">发送</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>联系我们</h2>
+          <div class="hint">此区域用于展示网站信息布局的合理性</div>
+        </div>
+        <div class="card pad">
+          <div class="two-col">
+            <div>
+              <div class="panel-title">联系方式</div>
+              <div class="list" style="margin-top:12px;">
+                <div class="item"><div><div style="font-weight:800;">邮箱</div><div class="desc">support@aurorashop.example</div></div><div class="tag"><span class="chip">Email</span></div></div>
+                <div class="item"><div><div style="font-weight:800;">电话</div><div class="desc">400-000-0000</div></div><div class="tag"><span class="chip">Phone</span></div></div>
+                <div class="item"><div><div style="font-weight:800;">地址</div><div class="desc">上海市 · 虚拟示例地址</div></div><div class="tag"><span class="chip">Address</span></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="panel-title">服务时间</div>
+              <div class="list" style="margin-top:12px;">
+                <div class="item"><div><div style="font-weight:800;">工作日</div><div class="desc">09:00 - 20:00</div></div><div class="tag"><span class="chip">Mon-Fri</span></div></div>
+                <div class="item"><div><div style="font-weight:800;">周末/节假日</div><div class="desc">10:00 - 18:00（演示）</div></div><div class="tag"><span class="chip">Weekend</span></div></div>
+                <div class="item"><div><div style="font-weight:800;">响应说明</div><div class="desc">留言将实时保存，本示例不接入真实客服系统。</div></div><div class="tag"><span class="chip">Note</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>
+

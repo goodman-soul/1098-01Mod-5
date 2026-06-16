@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>订单中心 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="orders">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>订单中心</h1>
+        <p>支持选项卡筛选订单，并演示通过 JS 动态修改订单状态。</p>
+      </div>
+
+      <section class="card pad">
+        <div class="tabs" data-role="order-tabs">
+          <button class="tab active" type="button" data-status="all">全部</button>
+          <button class="tab" type="button" data-status="待发货">待发货</button>
+          <button class="tab" type="button" data-status="已完成">已完成</button>
+        </div>
+        <div data-role="orders-wrap"></div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>订单规则（演示文案）</h2>
+          <div class="hint">用于丰富页面信息，同时保持整体风格一致</div>
+        </div>
+        <div class="card pad">
+          <div class="list">
+            <div class="item"><div><div style="font-weight:800;">发货时效</div><div class="desc">通常 24 小时内发货，节假日顺延（演示）。</div></div><div class="tag"><span class="chip">时效</span></div></div>
+            <div class="item"><div><div style="font-weight:800;">售后支持</div><div class="desc">支持 7 天无理由与 30 天质量问题退换（演示）。</div></div><div class="tag"><span class="chip">售后</span></div></div>
+            <div class="item"><div><div style="font-weight:800;">发票说明</div><div class="desc">可按需开具电子发票（演示）。</div></div><div class="tag"><span class="chip">发票</span></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>
+

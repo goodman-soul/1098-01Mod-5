@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>关于我们 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="about">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>关于我们</h1>
+        <p>无缝滚动（Marquee）+ 服务说明 + FAQ（演示文案）。</p>
+      </div>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>合作品牌墙（无缝滚动）</h2>
+          <div class="hint">鼠标悬停暂停滚动</div>
+        </div>
+        <div class="marquee">
+          <div class="track" data-role="marquee-track" aria-label="品牌 Logo 无缝滚动轨道">
+            <div class="logo">AURORA</div>
+            <div class="logo">NEBULA</div>
+            <div class="logo">VIOLET</div>
+            <div class="logo">NOVA</div>
+            <div class="logo">BREEZE</div>
+            <div class="logo">ORBIT</div>
+            <div class="logo">LUMEN</div>
+            <div class="logo">SPARK</div>
+            <div class="logo">GLACIER</div>
+            <div class="logo">MIRAGE</div>
+          </div>
+        </div>
+        <div class="notice" style="margin-top:12px;">
+          <strong>实现方式：</strong>JS 将轨道内容复制一份，使动画在 translateX(-50%) 时实现无缝衔接。
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>服务承诺</h2>
+          <div class="hint">合理的版权与服务信息集中在页脚</div>
+        </div>
+        <div class="two-col">
+          <div class="card pad">
+            <div class="panel-title">我们的理念</div>
+            <p style="color: rgba(255,255,255,0.72); margin-top:8px;">
+              Aurora Shop 是一个纯前端静态多页面示例站点，强调现代化 UI 与完整的交互演示：轮播、选项卡、无缝滚动、侧边栏、广告栏、
+              购物车与订单（localStorage）、留言板（DOM 动态增删改）、音视频控制等。
+            </p>
+            <div class="list" style="margin-top:12px;">
+              <div class="item"><div><div style="font-weight:800;">正品保障（演示）</div><div class="desc">展示服务入口与承诺信息的合理布局。</div></div><div class="tag"><span class="chip">保障</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">极速发货（演示）</div><div class="desc">与订单中心文案配合，形成完整购物闭环。</div></div><div class="tag"><span class="chip">时效</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">售后无忧（演示）</div><div class="desc">帮助中心、FAQ、留言反馈通道齐全。</div></div><div class="tag"><span class="chip">售后</span></div></div>
+            </div>
+          </div>
+
+          <div class="card pad">
+            <div class="panel-title">常见问题（FAQ）</div>
+            <div class="list" style="margin-top:12px;">
+              <div class="item"><div><div style="font-weight:800;">Q：站点为何是多页面？</div><div class="desc">A：便于展示导航结构、目录规划与不同页面特效的组合。</div></div><div class="tag"><span class="chip">结构</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">Q：购物车数据保存在哪里？</div><div class="desc">A：保存在浏览器 localStorage（演示），关闭浏览器后仍可保留。</div></div><div class="tag"><span class="chip">存储</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">Q：为什么没有真实支付？</div><div class="desc">A：静态站点不接入后端，结算页仅生成订单并清空购物车。</div></div><div class="tag"><span class="chip">演示</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">Q：音视频为什么可能无法自动播放？</div><div class="desc">A：浏览器通常禁止非用户手势触发的自动播放，需要点击播放按钮。</div></div><div class="tag"><span class="chip">浏览器</span></div></div>
+              <div class="item"><div><div style="font-weight:800;">Q：页面整体如何保持统一风格？</div><div class="desc">A：使用全站 CSS 变量、玻璃拟态卡片、统一按钮与表格样式，并由 JS 注入公共头尾。</div></div><div class="tag"><span class="chip">UI</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>
+

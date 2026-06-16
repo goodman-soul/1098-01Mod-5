@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>购物车 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="cart">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>购物车</h1>
+        <p>支持数量修改、删除、清空，并实时计算费用明细（localStorage）。</p>
+      </div>
+
+      <div class="card pad" data-role="cart-empty" style="display:none;">
+        <div class="notice"><strong>购物车为空：</strong>快去挑选喜欢的商品吧。</div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn primary" href="./catalog.html">去逛逛</a>
+          <a class="btn" href="../index.html">回首页</a>
+        </div>
+      </div>
+
+      <section class="two-col two-col--cart">
+        <div class="card pad">
+          <div class="panel-title">商品列表</div>
+          <table class="table cart-table" data-role="cart-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="notice" style="margin-top:12px;">
+            <strong>小技巧：</strong>修改数量后会自动刷新计算，数据将持久保存。
+          </div>
+        </div>
+
+        <div data-role="cart-totals" style="display:none;"></div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>

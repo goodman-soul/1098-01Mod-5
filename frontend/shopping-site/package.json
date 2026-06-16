@@ -1,0 +1,11 @@
+{
+  "name": "aurora-shop-static",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node ./server/dev-server.js",
+    "start": "node ./server/dev-server.js"
+  }
+}
+

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>媒体馆 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="media">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>媒体馆</h1>
+        <p>使用 JavaScript 控制音频与视频播放：播放/暂停/停止、进度、倍速、音量。</p>
+      </div>
+
+      <section class="two-col">
+        <div class="media-box" data-role="audio-box">
+          <div class="panel-title">音频演示</div>
+          <audio
+            data-role="audio"
+            preload="metadata"
+            src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"
+          ></audio>
+
+          <div class="media-controls">
+            <button class="btn primary" type="button" data-action="play">播放</button>
+            <button class="btn" type="button" data-action="pause">暂停</button>
+            <button class="btn danger" type="button" data-action="stop">停止</button>
+          </div>
+
+          <div class="range">
+            <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+              <span>进度</span>
+              <span data-role="time">00:00 / --:--</span>
+            </div>
+            <input data-role="seek" type="range" min="0" max="1000" value="0" />
+          </div>
+
+          <div class="range">
+            <span>音量</span>
+            <input data-role="volume" type="range" min="0" max="1" step="0.01" value="1" />
+          </div>
+
+          <div class="range">
+            <span>倍速</span>
+            <select data-role="rate" style="padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06);">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+
+          <div class="notice" style="margin-top:12px;">
+            <strong>提示：</strong>浏览器通常禁止自动播放，需用户点击“播放”。如无网络，音频资源可能加载失败。
+          </div>
+        </div>
+
+        <div class="media-box" data-role="video-box">
+          <div class="panel-title">视频演示</div>
+          <video
+            data-role="video"
+            preload="metadata"
+            playsinline
+            src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          ></video>
+
+          <div class="media-controls">
+            <button class="btn primary" type="button" data-action="play">播放</button>
+            <button class="btn" type="button" data-action="pause">暂停</button>
+            <button class="btn danger" type="button" data-action="stop">停止</button>
+          </div>
+
+          <div class="range">
+            <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+              <span>进度</span>
+              <span data-role="time">00:00 / --:--</span>
+            </div>
+            <input data-role="seek" type="range" min="0" max="1000" value="0" />
+          </div>
+
+          <div class="range">
+            <span>音量</span>
+            <input data-role="volume" type="range" min="0" max="1" step="0.01" value="0.9" />
+          </div>
+
+          <div class="range">
+            <span>倍速</span>
+            <select data-role="rate" style="padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06);">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+
+          <div class="notice" style="margin-top:12px;">
+            <strong>提示：</strong>如需全屏，可扩展按钮调用 requestFullscreen（演示不包含）。
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>扩展方向</h2>
+          <div class="hint">丰富页面内容（演示文案）</div>
+        </div>
+        <div class="card pad">
+          <div class="list">
+            <div class="item"><div><div style="font-weight:800;">商品短视频</div><div class="desc">可按商品 ID 切换不同视频资源，支持自动切换下一条。</div></div><div class="tag"><span class="chip">Video</span></div></div>
+            <div class="item"><div><div style="font-weight:800;">背景音乐</div><div class="desc">可增加“开关 + 记忆音量”，并在页面间共享设置。</div></div><div class="tag"><span class="chip">Audio</span></div></div>
+            <div class="item"><div><div style="font-weight:800;">字幕与倍速</div><div class="desc">可加载 WebVTT 字幕，结合倍速与进度条实现更友好的学习/展示体验。</div></div><div class="tag"><span class="chip">UX</span></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>
+

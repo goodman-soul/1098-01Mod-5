@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aurora Shop · 现代感购物网页（多页面）</title>
+    <meta name="description" content="Aurora Shop 纯静态多页面购物站点：轮播、无缝滚动、侧边栏、广告栏、选项卡、留言板、购物车、音视频控制。" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body data-page="home">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <section class="hero">
+        <div class="grid-2">
+          <div class="card carousel" data-role="carousel" aria-label="首页轮播">
+            <div class="slides" data-role="slides">
+              <div class="slide">
+                <div class="slide-copy slide-copy--spacious">
+                  <span class="chip">新品上架 · 数码专场</span>
+                  <h1 class="title">把“科技感”搬进日常，体验更顺滑的生活</h1>
+                  <p>轮播图（Carousel）演示：支持自动播放、悬停暂停、左右切换、圆点跳转。</p>
+                  <div class="cta">
+                    <a class="btn primary" href="./pages/catalog.html?cat=数码">立即选购</a>
+                    <a class="btn" href="./pages/media.html">看视频</a>
+                  </div>
+                </div>
+                <div class="art" aria-hidden="true">
+                  <img src="./assets/img/hero/aurora-digital.jpg" alt="" loading="eager" decoding="async" />
+                </div>
+              </div>
+
+              <div class="slide">
+                <div class="slide-copy slide-copy--spacious">
+                  <span class="chip">家居焕新 · 轻奢氛围</span>
+                  <h2 class="title">一盏灯、一点香，打造专属“放松区”</h2>
+                  <p>现代配色 + 玻璃拟态风格（Glassmorphism），配合阴影与渐变。</p>
+                  <div class="cta">
+                    <a class="btn primary" href="./pages/catalog.html?cat=家居">去逛家居</a>
+                    <a class="btn" href="./pages/about.html">了解服务</a>
+                  </div>
+                </div>
+                <div class="art" aria-hidden="true">
+                  <img src="./assets/img/hero/aurora-home.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+
+              <div class="slide">
+                <div class="slide-copy slide-copy--spacious">
+                  <span class="chip">运动季 · 轻量装备</span>
+                  <h2 class="title">从今天开始：轻量、透气、耐磨，一步到位</h2>
+                  <p>配合“侧边栏快捷入口”“返回顶部”等交互，提升可用性。</p>
+                  <div class="cta">
+                    <a class="btn primary" href="./pages/catalog.html?cat=运动">马上出发</a>
+                    <a class="btn" href="./pages/contact.html#message-board">留言建议</a>
+                  </div>
+                </div>
+                <div class="art" aria-hidden="true">
+                  <img src="./assets/img/hero/aurora-sport.jpg" alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
+
+            <div class="controls">
+              <div class="dots" data-role="dots" aria-label="轮播圆点"></div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn" type="button" data-role="prev" aria-label="上一张">上一张</button>
+                <button class="btn" type="button" data-role="next" aria-label="下一张">下一张</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card pad">
+            <div class="panel-title">本页亮点</div>
+            <div class="list">
+              <div class="item">
+                <div>
+                  <div style="font-weight:800;">导航栏 & 顶部栏</div>
+                  <div class="desc">顶部栏（服务/入口） + 导航栏（菜单/搜索/购物车徽标）。</div>
+                </div>
+                <div class="tag"><span class="chip">布局</span></div>
+              </div>
+              <div class="item">
+                <div>
+                  <div style="font-weight:800;">广告栏 & 侧边栏</div>
+                  <div class="desc">广告栏可关闭并保存状态；侧边栏提供客服/领券/主题切换。</div>
+                </div>
+                <div class="tag"><span class="chip">交互</span></div>
+              </div>
+              <div class="item">
+                <div>
+                  <div style="font-weight:800;">DOM 动态修改</div>
+                  <div class="desc">留言板支持增删点赞并持久化；购物车与订单也采用本地存储。</div>
+                </div>
+                <div class="tag"><span class="chip">DOM</span></div>
+              </div>
+              <div class="item">
+                <div>
+                  <div style="font-weight:800;">音频/视频控制</div>
+                  <div class="desc">媒体馆页面提供自定义控制：播放/暂停、停止、进度、倍速、音量。</div>
+                </div>
+                <div class="tag"><span class="chip">Media</span></div>
+              </div>
+            </div>
+
+            <div class="kpi-row" style="margin-top:12px;">
+              <div class="kpi">
+                <div class="num">10+</div>
+                <div class="label">页面与模块</div>
+              </div>
+              <div class="kpi">
+                <div class="num">320</div>
+                <div class="label">演示商品数据</div>
+              </div>
+              <div class="kpi">
+                <div class="num">Glass</div>
+                <div class="label">现代 UI 风格</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>今日精选</h2>
+          <div class="hint">来自评分靠前的商品（演示），支持“加入购物车/收藏”</div>
+        </div>
+        <div class="products-grid" data-role="featured"></div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>热销榜单</h2>
+          <div class="hint">价格维度排序示例（演示）</div>
+        </div>
+        <div class="card pad">
+          <div class="list list--divided" data-role="hot-list"></div>
+          <div class="notice" style="margin-top:12px;">
+            <strong>说明：</strong>商品数据来自 <code>product-data.js</code>，多页面共享，可用于搜索、分类、购物车结算等。
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="./assets/js/bootstrap.js"></script>
+  </body>
+</html>

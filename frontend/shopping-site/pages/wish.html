@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>收藏中心 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="wish">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1>收藏中心</h1>
+        <p>展示你收藏的商品列表，可在此快速取消收藏或加入购物车（localStorage）。</p>
+      </div>
+
+      <div class="card pad" data-role="wish-empty" style="display:none;">
+        <div class="notice"><strong>暂无收藏：</strong>去商品列表收藏一些喜欢的商品吧。</div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn primary" href="./catalog.html">去逛逛</a>
+          <a class="btn" href="../index.html">回首页</a>
+        </div>
+      </div>
+
+      <section class="section" data-role="wish-section" style="display:none;">
+        <div class="title-row">
+          <h2>我的收藏</h2>
+          <div class="hint">点击“收藏/取消”可从列表中移除</div>
+        </div>
+        <div class="products-grid" data-role="wish-grid"></div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>

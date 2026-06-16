@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>商品详情 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="product">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1 data-role="p-name">商品详情</h1>
+        <p data-role="p-meta">根据 URL 参数 ?id=... 动态加载。</p>
+      </div>
+
+      <section class="two-col">
+        <div class="card pad">
+          <div class="gallery-main" data-role="gallery-main">
+            <img class="gallery-img" data-role="gallery-img" alt="" />
+          </div>
+          <div class="gallery-thumbs" data-role="gallery-thumbs"></div>
+        </div>
+
+        <div class="card pad">
+          <div class="panel-title">购买信息</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;" data-role="p-tags"></div>
+          <div style="margin-top:12px; display:flex; align-items:end; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <div class="muted" style="font-size:13px;">到手价（演示）</div>
+              <div class="price-lg" data-role="p-price">¥0</div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span class="chip">数量</span>
+              <input class="input" data-role="qty" type="number" min="1" max="99" value="1" style="width:100px;" />
+            </div>
+          </div>
+          <div class="muted" style="margin-top:12px;" data-role="p-desc"></div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+            <button class="btn primary" type="button" data-role="add-cart">加入购物车</button>
+            <a class="btn" href="./cart.html">查看购物车</a>
+            <a class="btn" href="./catalog.html">继续购物</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="title-row">
+          <h2>详情与信息</h2>
+          <div class="hint">选项卡（Tabs）演示：详情 / 参数 / 评价</div>
+        </div>
+        <div class="card pad">
+          <div class="tabs" data-role="detail-tabs">
+            <button class="tab active" type="button" data-name="desc">详情</button>
+            <button class="tab" type="button" data-name="spec">参数</button>
+            <button class="tab" type="button" data-name="reviews">评价</button>
+          </div>
+
+          <div data-role="detail-panel" data-name="desc">
+            <div data-role="desc-full"></div>
+          </div>
+          <div data-role="detail-panel" data-name="spec" style="display:none;">
+            <div data-role="spec"></div>
+          </div>
+          <div data-role="detail-panel" data-name="reviews" style="display:none;">
+            <div data-role="reviews"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>

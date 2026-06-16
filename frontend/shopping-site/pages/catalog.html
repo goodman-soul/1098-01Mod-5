@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>分类与商品 · Aurora Shop</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body data-page="catalog">
+    <div data-shell="header"></div>
+
+    <main class="container">
+      <div class="page-head">
+        <h1 data-role="catalog-title">分类与商品</h1>
+        <p data-role="catalog-hint">支持选项卡切换、排序与搜索跳转。</p>
+      </div>
+
+      <section class="card pad">
+        <div class="tabs" data-role="catalog-tabs" aria-label="分类选项卡"></div>
+
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:space-between; margin-bottom:12px;">
+          <div class="notice" style="flex:1;">
+            <strong>提示：</strong>在导航栏搜索框输入关键词，会跳转到本页并展示结果（?q=xxx）。
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="chip">排序</span>
+            <select data-role="sorter" style="padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06);">
+              <option value="recommend">推荐（默认）</option>
+              <option value="price-asc">价格从低到高</option>
+              <option value="price-desc">价格从高到低</option>
+              <option value="rating-desc">评分从高到低</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="products-grid" data-role="catalog-grid"></div>
+        <div class="hint" style="margin-top:10px;" data-role="more-hint"></div>
+      </section>
+    </main>
+
+    <div data-shell="footer"></div>
+    <script type="module" src="../assets/js/bootstrap.js"></script>
+  </body>
+</html>
+
