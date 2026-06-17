@@ -5,6 +5,7 @@
 */
 
 import { readJSON, writeJSON } from "./store.js";
+import { isLiveActive, getLivePrice, cleanExpiredHolds } from "./live-store.js";
 
 const CART_KEY = "aurora_cart_v1";
 
@@ -15,7 +16,8 @@ function normalizeCart(cart) {
     items: items
       .map((x) => ({
         id: String(x?.id ?? ""),
-        qty: Math.max(1, Math.min(99, Number(x?.qty ?? 1) || 1))
+        qty: Math.max(1, Math.min(99, Number(x?.qty ?? 1) || 1)),
+        liveHoldId: x?.liveHoldId || null
       }))
       .filter((x) => x.id.length > 0)
   };
@@ -38,14 +40,18 @@ export function getCartCount() {
   return cart.items.reduce((sum, it) => sum + it.qty, 0);
 }
 
-export function addToCart(productId, qty = 1) {
+export function addToCart(productId, qty = 1, liveHoldId = null) {
   const cart = getCart();
   const id = String(productId);
   const addQty = Math.max(1, Math.min(99, Number(qty) || 1));
 
   const found = cart.items.find((i) => i.id === id);
-  if (found) found.qty = Math.min(99, found.qty + addQty);
-  else cart.items.push({ id, qty: addQty });
+  if (found) {
+    found.qty = Math.min(99, found.qty + addQty);
+    if (liveHoldId) found.liveHoldId = liveHoldId;
+  } else {
+    cart.items.push({ id, qty: addQty, liveHoldId });
+  }
 
   setCart(cart);
   return getCart();
@@ -70,17 +76,24 @@ export function updateCartQty(productId, qty) {
 }
 
 export function calcCartTotals(productsById) {
+  cleanExpiredHolds();
   const cart = getCart();
   const lines = cart.items.map((it) => {
     const p = productsById(it.id);
-    const price = Number(p?.price ?? 0) || 0;
+    const originalPrice = Number(p?.price ?? 0) || 0;
+    const livePrice = (p && isLiveActive(p)) ? getLivePrice(p) : null;
+    const price = livePrice !== null ? livePrice : originalPrice;
     const total = price * it.qty;
-    return { ...it, price, total, product: p || null };
+    const originalTotal = originalPrice * it.qty;
+    const liveDiscount = livePrice !== null ? (originalPrice - livePrice) * it.qty : 0;
+    return { ...it, originalPrice, price, originalTotal, liveDiscount, total, product: p || null };
   });
-  const subtotal = lines.reduce((s, x) => s + x.total, 0);
-  const shipping = subtotal >= 199 ? 0 : subtotal > 0 ? 15 : 0;
-  const discount = subtotal >= 299 ? 40 : 0;
-  const payable = Math.max(0, subtotal + shipping - discount);
-  return { lines, subtotal, shipping, discount, payable };
+  const subtotal = lines.reduce((s, x) => s + x.originalTotal, 0);
+  const liveDiscount = lines.reduce((s, x) => s + x.liveDiscount, 0);
+  const adjustedSubtotal = subtotal - liveDiscount;
+  const shipping = adjustedSubtotal >= 199 ? 0 : adjustedSubtotal > 0 ? 15 : 0;
+  const discount = adjustedSubtotal >= 299 ? 40 : 0;
+  const payable = Math.max(0, adjustedSubtotal + shipping - discount);
+  return { lines, subtotal, liveDiscount, adjustedSubtotal, shipping, discount, payable };
 }
 

@@ -6,6 +6,11 @@
 
 import { PRODUCTS } from "../product-data.js";
 import { renderProductCards } from "../ui-products.js";
+import { isLiveActive, getLivePrice, formatCountdown, getLiveCountdown } from "../live-store.js";
+
+function pickLiveProducts(n = 4) {
+  return PRODUCTS.filter((p) => p.live).slice(0, n);
+}
 
 function pickTop(n = 8) {
   return PRODUCTS.slice()
@@ -69,6 +74,12 @@ function initCarousel() {
 }
 
 function renderHome() {
+  const liveEl = document.querySelector("[data-role='live-products']");
+  if (liveEl) {
+    const liveProducts = pickLiveProducts(4);
+    renderProductCards(liveEl, liveProducts, { emptyText: "暂无直播商品" });
+  }
+
   const featuredEl = document.querySelector("[data-role='featured']");
   renderProductCards(featuredEl, pickTop(8), { emptyText: "暂无精选商品" });
 
@@ -77,17 +88,36 @@ function renderHome() {
   if (listEl) {
     listEl.innerHTML = hot
       .map(
-        (p, i) => `
+        (p, i) => {
+          const liveOn = isLiveActive(p);
+          const lp = liveOn ? getLivePrice(p) : null;
+          const cd = liveOn ? getLiveCountdown(p.id) : null;
+          let priceHtml = `<span class="price-chip">${formatPrice(p.price)}</span>`;
+          if (liveOn && lp) {
+            priceHtml = `
+              <span class="price-chip" style="background:var(--danger);color:#fff;border-color:var(--danger);">
+                直播价 ${formatPrice(lp)}
+              </span>
+            `;
+          } else if (p.live && !liveOn) {
+            priceHtml = `<span class="price-chip" style="opacity:0.6;">${formatPrice(p.price)}</span>`;
+          }
+          return `
           <a class="item" href="./pages/product.html?id=${encodeURIComponent(p.id)}" aria-label="查看商品：${escapeHTML(p.name)}">
             <div>
-              <div style="font-weight:800;">#${i + 1} ${escapeHTML(p.name)}</div>
+              <div style="font-weight:800;">
+                #${i + 1} ${escapeHTML(p.name)}
+                ${liveOn ? '<span class="chip" style="margin-left:6px;background:linear-gradient(135deg,rgba(239,68,68,0.92),rgba(236,72,153,0.55));color:#fff;font-size:11px;">🔴 直播中</span>' : ""}
+              </div>
               <div class="desc">${escapeHTML(p.category)} · ⭐ ${Number(p.rating || 0).toFixed(1)} · ${escapeHTML((p.tags || []).slice(0, 3).join(" / "))}</div>
+              ${liveOn && cd ? `<div class="desc" style="color:var(--danger);font-weight:600;margin-top:2px;">⏱ 距结束 ${formatCountdown(cd)}</div>` : ""}
             </div>
             <div class="tag">
-              <span class="price-chip">${formatPrice(p.price)}</span>
+              ${priceHtml}
             </div>
           </a>
-        `
+        `;
+        }
       )
       .join("");
   }

@@ -8,6 +8,17 @@ import { productById } from "../product-data.js";
 import { addToCart } from "../cart-store.js";
 import { syncBadges, toast } from "../app.js";
 import { productImageUrl } from "../ui-products.js";
+import {
+  isLiveActive,
+  isLiveEnded,
+  getLivePrice,
+  getRemainingStock,
+  getLiveCountdown,
+  formatCountdown,
+  getLiveStatusMessage,
+  reserveLiveStock,
+  cleanExpiredHolds
+} from "../live-store.js";
 
 function getId() {
   const sp = new URLSearchParams(window.location.search);
@@ -51,23 +62,123 @@ function renderProduct() {
     return;
   }
 
+  cleanExpiredHolds();
+
   if (nameEl) nameEl.textContent = p.name;
   if (metaEl) metaEl.textContent = `${p.category} · ⭐ ${Number(p.rating || 0).toFixed(1)} · 编号 ${p.id}`;
   if (priceEl) priceEl.textContent = `¥${Number(p.price || 0).toFixed(0)}`;
   if (tagsEl) tagsEl.innerHTML = (p.tags || []).map((t) => `<span class="chip">${escapeHTML(t)}</span>`).join("");
   if (descEl) descEl.textContent = p.desc;
 
+  const liveOn = isLiveActive(p);
+  const liveOver = isLiveEnded(p);
+  const liveStatusMsg = getLiveStatusMessage(p);
+
+  const liveInfoEl = document.querySelector("[data-role='p-live-info']");
+  if (liveInfoEl) {
+    if (liveOn) {
+      const lp = getLivePrice(p);
+      const stock = getRemainingStock(p.id);
+      const cd = getLiveCountdown(p.id);
+      const holdSec = p.live.liveHoldSec;
+      liveInfoEl.innerHTML = `
+        <div class="live-detail-banner">
+          <div class="live-badge" style="margin-bottom:8px;">🔴 直播推荐</div>
+          <div class="live-price-block" style="margin-bottom:6px;">
+            <span class="price live-price" style="font-size:28px;font-weight:900;">¥${lp} <small>直播价</small></span>
+            <span class="price live-price-original" style="font-size:16px;margin-left:10px;">¥${p.price}</span>
+          </div>
+          <div class="live-stock">仅剩 <strong>${stock}</strong> 件</div>
+          <div class="live-countdown" data-live-cd="${p.id}" style="font-size:18px;font-weight:700;">⏱ ${formatCountdown(cd)}</div>
+          <div class="live-hold-hint" style="margin-top:6px;color:var(--muted);font-size:12px;">加入购物车后库存保留 ${holdSec} 秒，超时将释放</div>
+        </div>
+      `;
+      liveInfoEl.style.display = "";
+      startDetailCountdown(liveInfoEl, p.id);
+      if (priceEl) {
+        priceEl.innerHTML = `¥${p.price} <small style="text-decoration:line-through;color:var(--muted);font-size:14px;">原价</small>`;
+      }
+    } else if (liveOver && p.live) {
+      if (liveStatusMsg?.type === "price_restore") {
+        liveInfoEl.innerHTML = `
+          <div class="live-detail-banner live-detail-ended">
+            <div class="live-badge live-badge-ended" style="margin-bottom:6px;">直播已结束</div>
+            <div class="live-status-msg live-status-restore" style="font-size:15px;">直播活动已结束，价格已恢复原价 ¥${p.price}</div>
+          </div>
+        `;
+        liveInfoEl.style.display = "";
+      } else if (liveStatusMsg?.type === "sold_out") {
+        liveInfoEl.innerHTML = `
+          <div class="live-detail-banner live-detail-ended">
+            <div class="live-badge live-badge-soldout" style="margin-bottom:6px;">已售罄</div>
+            <div class="live-status-msg live-status-soldout" style="font-size:15px;">直播库存已售罄，商品已下架</div>
+          </div>
+        `;
+        liveInfoEl.style.display = "";
+      }
+      if (priceEl) priceEl.textContent = `¥${Number(p.price || 0).toFixed(0)}`;
+    } else {
+      liveInfoEl.innerHTML = "";
+      liveInfoEl.style.display = "none";
+      if (priceEl) priceEl.textContent = `¥${Number(p.price || 0).toFixed(0)}`;
+    }
+  } else {
+    if (priceEl) priceEl.textContent = `¥${Number(p.price || 0).toFixed(0)}`;
+  }
+
   const addBtn = document.querySelector("[data-role='add-cart']");
   const qtyEl = document.querySelector("[data-role='qty']");
   addBtn?.addEventListener("click", () => {
     const qty = Math.max(1, Math.min(99, Number(qtyEl?.value || 1) || 1));
-    addToCart(p.id, qty);
-    syncBadges();
-    toast("已加入购物车", `${p.name} × ${qty}`);
+
+    if (isLiveActive(p)) {
+      const res = reserveLiveStock(p.id, qty);
+      if (!res.ok) {
+        if (res.reason === "live_ended") {
+          toast("无法加入", "直播活动已结束，价格已恢复");
+          renderProduct();
+        } else if (res.reason === "live_sold_out") {
+          toast("无法加入", "直播库存已售罄");
+          renderProduct();
+        }
+        return;
+      }
+      addToCart(p.id, qty, res.holdId);
+      syncBadges();
+      toast("已加入购物车（直播价）", `${p.name} × ${qty} · 直播库存已保留 ${p.live.liveHoldSec}秒`);
+      renderProduct();
+    } else if (p.live && (liveOver || liveStatusMsg?.type === "sold_out")) {
+      if (liveStatusMsg?.type === "sold_out") toast("无法加入", "直播库存已售罄，商品已下架");
+      else toast("无法加入", "直播活动已结束，价格已恢复");
+      return;
+    } else {
+      addToCart(p.id, qty);
+      syncBadges();
+      toast("已加入购物车", `${p.name} × ${qty}`);
+    }
   });
 
   initGallery(p);
   fillPanels(p);
+}
+
+let _detailCdTimer = null;
+function startDetailCountdown(container, productId) {
+  if (_detailCdTimer) window.clearInterval(_detailCdTimer);
+  const cdEl = container.querySelector("[data-live-cd]");
+  if (!cdEl) return;
+  _detailCdTimer = window.setInterval(() => {
+    const cd = getLiveCountdown(productId);
+    if (cd) {
+      cdEl.textContent = `⏱ ${formatCountdown(cd)}`;
+    } else {
+      cdEl.textContent = "⏱ 已结束";
+      cdEl.classList.add("live-countdown-ended");
+      window.clearInterval(_detailCdTimer);
+      toast("直播已结束", "价格已恢复原价");
+      renderProduct();
+    }
+  }, 1000);
 }
 
 function initGallery(p) {

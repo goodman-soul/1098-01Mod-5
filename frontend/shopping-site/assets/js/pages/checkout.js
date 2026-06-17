@@ -7,6 +7,7 @@ import { productById } from "../product-data.js";
 import { calcCartTotals, clearCart, getCart } from "../cart-store.js";
 import { createOrder } from "../order-store.js";
 import { syncBadges, toast } from "../app.js";
+import { isLiveActive, getLivePrice, cleanExpiredHolds, confirmLiveHold } from "../live-store.js";
 
 function money(n) {
   const v = Number(n) || 0;
@@ -17,6 +18,7 @@ function renderCheckout() {
   const wrap = document.querySelector("[data-role='checkout-wrap']");
   if (!wrap) return;
 
+  cleanExpiredHolds();
   const res = calcCartTotals((id) => productById(id));
   const hasItems = res.lines.some((x) => x.product);
 
@@ -37,7 +39,21 @@ function renderCheckout() {
   const lines = res.lines
     .filter((x) => x.product)
     .slice(0, 6)
-    .map((x) => `<div class="item"><div>${escapeHTML(x.product.name)} × ${x.qty}</div><div class="tag"><span class="chip">${money(x.total)}</span></div></div>`)
+    .map((x) => {
+      const p = x.product;
+      const liveOn = isLiveActive(p);
+      const lp = liveOn ? getLivePrice(p) : null;
+      let lineHtml = `<div>${escapeHTML(p.name)} × ${x.qty}</div>`;
+      if (liveOn && lp) {
+        lineHtml = `
+          <div>
+            <div>${escapeHTML(p.name)} × ${x.qty} <span class="chip" style="margin-left:4px;font-size:11px;background:linear-gradient(135deg,rgba(239,68,68,0.92),rgba(236,72,153,0.55));color:#fff;">直播价</span></div>
+            <div class="desc" style="color:var(--muted);font-size:12px;">原价 ${money(p.price)}/件 · 已优惠 ${money((p.price - lp) * x.qty)}</div>
+          </div>
+        `;
+      }
+      return `<div class="item">${lineHtml}<div class="tag"><span class="chip">${money(x.total)}</span></div></div>`;
+    })
     .join("");
 
   wrap.innerHTML = `
@@ -83,10 +99,12 @@ function renderCheckout() {
         <div class="list">${lines}</div>
         <div class="list" style="margin-top:12px;">
           <div class="item"><div>商品小计</div><div class="tag"><span class="chip">${money(res.subtotal)}</span></div></div>
-          <div class="item"><div>运费</div><div class="tag"><span class="chip">${money(res.shipping)}</span></div></div>
-          <div class="item"><div>优惠</div><div class="tag"><span class="chip">-${money(res.discount)}</span></div></div>
+          ${res.liveDiscount > 0 ? `<div class="item"><div>直播优惠</div><div class="tag"><span class="chip" style="border-color:var(--accent);color:var(--accent);">-${money(res.liveDiscount)}</span></div></div>` : ""}
+          <div class="item"><div>运费（满199免运）</div><div class="tag"><span class="chip">${money(res.shipping)}</span></div></div>
+          <div class="item"><div>优惠（满299减40）</div><div class="tag"><span class="chip">-${money(res.discount)}</span></div></div>
           <div class="item"><div style="font-weight:900;">应付</div><div class="tag"><span class="chip"><span style="font-weight:900;">${money(res.payable)}</span></span></div></div>
         </div>
+        ${res.liveDiscount > 0 ? `<div class="notice" style="margin-top:12px;"><strong>直播提示：</strong>直播商品价格优惠仅限活动期间，订单提交后库存锁定解除。</div>` : ""}
       </div>
     </div>
   `;
@@ -109,6 +127,12 @@ function bindSubmit(payable) {
     if (!/^[0-9+\\-\\s]{7,20}$/.test(phone)) return toast("手机号格式", "请输入正确的手机号/电话");
 
     const cart = getCart();
+    cart.items.forEach((item) => {
+      if (item.liveHoldId) {
+        confirmLiveHold(item.id, item.liveHoldId);
+      }
+    });
+
     const order = createOrder({
       payable,
       receiver,
