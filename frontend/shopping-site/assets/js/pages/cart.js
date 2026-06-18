@@ -17,7 +17,8 @@ import {
   formatCountdown,
   getLiveStatusMessage,
   releaseLiveStock,
-  cleanExpiredHolds
+  cleanExpiredHolds,
+  getLiveEnd
 } from "../live-store.js";
 
 function money(n) {
@@ -251,7 +252,7 @@ function startHoldCountdowns() {
       const p = productById(item.id);
       if (p?.live && !_notifiedExpired.has(`live_${item.id}`)) {
         const wasActive = isLiveActive(p);
-        if (!wasActive && Date.now() >= p.live.liveEnd) {
+        if (!wasActive && Date.now() >= getLiveEnd(p.id)) {
           _notifiedExpired.add(`live_${item.id}`);
           anyEnded = true;
         }

@@ -44,6 +44,59 @@ function initTabs() {
   active("desc");
 }
 
+let _addCartBound = false;
+let _galleryBound = false;
+
+function bindAddCartOnce() {
+  if (_addCartBound) return;
+  _addCartBound = true;
+
+  const addBtn = document.querySelector("[data-role='add-cart']");
+  if (!addBtn) {
+    _addCartBound = false;
+    return;
+  }
+
+  addBtn.addEventListener("click", () => {
+    const id = getId();
+    const p = productById(id);
+    if (!p) return;
+
+    const qtyEl = document.querySelector("[data-role='qty']");
+    const qty = Math.max(1, Math.min(99, Number(qtyEl?.value || 1) || 1));
+
+    const liveOn = isLiveActive(p);
+    const liveOver = isLiveEnded(p);
+    const liveStatusMsg = getLiveStatusMessage(p);
+
+    if (liveOn) {
+      const res = reserveLiveStock(p.id, qty);
+      if (!res.ok) {
+        if (res.reason === "live_ended") {
+          toast("无法加入", "直播活动已结束，价格已恢复");
+          renderProduct();
+        } else if (res.reason === "live_sold_out") {
+          toast("无法加入", "直播库存已售罄");
+          renderProduct();
+        }
+        return;
+      }
+      addToCart(p.id, qty, res.holdId);
+      syncBadges();
+      toast("已加入购物车（直播价）", `${p.name} × ${qty} · 直播库存已保留 ${p.live.liveHoldSec}秒`);
+      renderProduct();
+    } else if (p.live && (liveOver || liveStatusMsg?.type === "sold_out")) {
+      if (liveStatusMsg?.type === "sold_out") toast("无法加入", "直播库存已售罄，商品已下架");
+      else toast("无法加入", "直播活动已结束，价格已恢复");
+      return;
+    } else {
+      addToCart(p.id, qty);
+      syncBadges();
+      toast("已加入购物车", `${p.name} × ${qty}`);
+    }
+  });
+}
+
 function renderProduct() {
   const id = getId();
   const p = productById(id);
@@ -126,37 +179,7 @@ function renderProduct() {
     if (priceEl) priceEl.textContent = `¥${Number(p.price || 0).toFixed(0)}`;
   }
 
-  const addBtn = document.querySelector("[data-role='add-cart']");
-  const qtyEl = document.querySelector("[data-role='qty']");
-  addBtn?.addEventListener("click", () => {
-    const qty = Math.max(1, Math.min(99, Number(qtyEl?.value || 1) || 1));
-
-    if (isLiveActive(p)) {
-      const res = reserveLiveStock(p.id, qty);
-      if (!res.ok) {
-        if (res.reason === "live_ended") {
-          toast("无法加入", "直播活动已结束，价格已恢复");
-          renderProduct();
-        } else if (res.reason === "live_sold_out") {
-          toast("无法加入", "直播库存已售罄");
-          renderProduct();
-        }
-        return;
-      }
-      addToCart(p.id, qty, res.holdId);
-      syncBadges();
-      toast("已加入购物车（直播价）", `${p.name} × ${qty} · 直播库存已保留 ${p.live.liveHoldSec}秒`);
-      renderProduct();
-    } else if (p.live && (liveOver || liveStatusMsg?.type === "sold_out")) {
-      if (liveStatusMsg?.type === "sold_out") toast("无法加入", "直播库存已售罄，商品已下架");
-      else toast("无法加入", "直播活动已结束，价格已恢复");
-      return;
-    } else {
-      addToCart(p.id, qty);
-      syncBadges();
-      toast("已加入购物车", `${p.name} × ${qty}`);
-    }
-  });
+  bindAddCartOnce();
 
   initGallery(p);
   fillPanels(p);

@@ -1,7 +1,19 @@
-import { readJSON, writeJSON } from "./store.js";
-import { productById } from "./product-data.js";
+import { readJSON, writeJSON, remove } from "./store.js";
+import { productById, PRODUCTS } from "./product-data.js";
 
 const LIVE_KEY = "aurora_live_v1";
+const LIVE_END_KEY = "aurora_live_end_v1";
+const LIVE_VERSION_KEY = "aurora_live_ver_v1";
+const EXPECTED_LIVE_VERSION = 2;
+
+(function checkVersionReset() {
+  const savedVer = Number(readJSON(LIVE_VERSION_KEY, 0)) || 0;
+  if (savedVer < EXPECTED_LIVE_VERSION) {
+    remove(LIVE_KEY);
+    remove(LIVE_END_KEY);
+    writeJSON(LIVE_VERSION_KEY, EXPECTED_LIVE_VERSION);
+  }
+})();
 
 function getLiveState() {
   return readJSON(LIVE_KEY, { stock: {}, holds: {} });
@@ -11,14 +23,57 @@ function setLiveState(state) {
   writeJSON(LIVE_KEY, state);
 }
 
+function getLiveEndState() {
+  return readJSON(LIVE_END_KEY, {});
+}
+
+function setLiveEndState(state) {
+  writeJSON(LIVE_END_KEY, state);
+}
+
+function initLiveEnds() {
+  const state = getLiveEndState();
+  const now = Date.now();
+  let changed = false;
+  PRODUCTS.forEach((p) => {
+    if (p?.live && p.live.liveDurationMs) {
+      const savedEnd = state[p.id];
+      if (!savedEnd || savedEnd < now) {
+        state[p.id] = now + p.live.liveDurationMs;
+        changed = true;
+      }
+    }
+  });
+  if (changed) setLiveEndState(state);
+  return state;
+}
+
+const _liveEnds = initLiveEnds();
+
+function getLiveEnd(productId) {
+  const pid = String(productId);
+  if (_liveEnds[pid]) return _liveEnds[pid];
+  const p = productById(pid);
+  if (p?.live && p.live.liveDurationMs) {
+    const newEnd = Date.now() + p.live.liveDurationMs;
+    _liveEnds[pid] = newEnd;
+    const state = getLiveEndState();
+    state[pid] = newEnd;
+    setLiveEndState(state);
+  }
+  return _liveEnds[pid] || 0;
+}
+
+export { getLiveEnd };
+
 export function isLiveActive(product) {
   if (!product?.live) return false;
-  return Date.now() < product.live.liveEnd && getRemainingStock(product.id) > 0;
+  return Date.now() < getLiveEnd(product.id) && getRemainingStock(product.id) > 0;
 }
 
 export function isLiveEnded(product) {
   if (!product?.live) return false;
-  return Date.now() >= product.live.liveEnd;
+  return Date.now() >= getLiveEnd(product.id);
 }
 
 export function getLivePrice(product) {
@@ -38,7 +93,7 @@ export function getRemainingStock(productId) {
 export function reserveLiveStock(productId, qty) {
   const p = productById(productId);
   if (!p?.live) return { ok: false, reason: "" };
-  if (Date.now() >= p.live.liveEnd) return { ok: false, reason: "live_ended" };
+  if (Date.now() >= getLiveEnd(productId)) return { ok: false, reason: "live_ended" };
 
   const remaining = getRemainingStock(productId);
   if (remaining < qty) return { ok: false, reason: "live_sold_out" };
@@ -110,7 +165,7 @@ export function getLiveHoldInfo(productId, holdId) {
 export function getLiveCountdown(productId) {
   const p = productById(productId);
   if (!p?.live) return null;
-  const remaining = p.live.liveEnd - Date.now();
+  const remaining = getLiveEnd(productId) - Date.now();
   if (remaining <= 0) return null;
   const h = Math.floor(remaining / 3600000);
   const m = Math.floor((remaining % 3600000) / 60000);
@@ -125,7 +180,7 @@ export function formatCountdown(cd) {
 
 export function getLiveStatusMessage(product) {
   if (!product?.live) return null;
-  if (Date.now() >= product.live.liveEnd) {
+  if (Date.now() >= getLiveEnd(product.id)) {
     return { type: "price_restore", text: "直播已结束，价格已恢复原价" };
   }
   if (getRemainingStock(product.id) <= 0) {

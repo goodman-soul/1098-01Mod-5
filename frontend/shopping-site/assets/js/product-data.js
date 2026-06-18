@@ -24,7 +24,7 @@ export const PRODUCTS = [
     rating: 4.2,
     tags: ['高清', '长续航', '蓝牙'],
     desc: '数码热卖款，高清·长续航·蓝牙，适合日常与送礼（演示数据）。',
-    live: { livePrice: 199, liveStock: 50, liveEnd: Date.now() + 7200000, liveHoldSec: 600 }
+    live: { livePrice: 199, liveStock: 50, liveDurationMs: 7200000, liveHoldSec: 600 }
   },
   {
     id: 'p0002',
@@ -43,7 +43,7 @@ export const PRODUCTS = [
     rating: 4.5,
     tags: ['清爽', '温和', '保湿'],
     desc: '美妆热卖款，清爽·温和·保湿，适合日常与送礼（演示数据）。',
-    live: { livePrice: 99, liveStock: 30, liveEnd: Date.now() + 3600000, liveHoldSec: 300 }
+    live: { livePrice: 99, liveStock: 30, liveDurationMs: 3600000, liveHoldSec: 300 }
   },
   {
     id: 'p0004',
@@ -98,7 +98,7 @@ export const PRODUCTS = [
     rating: 4.8,
     tags: ['快充', 'Type-C', '降噪'],
     desc: '数码热卖款，快充·Type-C·降噪，适合日常与送礼（演示数据）。',
-    live: { livePrice: 168, liveStock: 20, liveEnd: Date.now() + 5400000, liveHoldSec: 600 }
+    live: { livePrice: 168, liveStock: 20, liveDurationMs: 5400000, liveHoldSec: 600 }
   },
   {
     id: 'p0010',
@@ -126,7 +126,7 @@ export const PRODUCTS = [
     rating: 4.8,
     tags: ['透气', '耐磨', '轻量'],
     desc: '运动热卖款，透气·耐磨·轻量，适合日常与送礼（演示数据）。',
-    live: { livePrice: 59, liveStock: 80, liveEnd: Date.now() + 1800000, liveHoldSec: 300 }
+    live: { livePrice: 59, liveStock: 80, liveDurationMs: 1800000, liveHoldSec: 300 }
   },
   {
     id: 'p0013',
@@ -145,7 +145,7 @@ export const PRODUCTS = [
     rating: 4.9,
     tags: ['透气', '百搭', '舒适'],
     desc: '服饰热卖款，透气·百搭·舒适，适合日常与送礼（演示数据）。',
-    live: { livePrice: 69, liveStock: 40, liveEnd: Date.now() + 6000000, liveHoldSec: 600 }
+    live: { livePrice: 69, liveStock: 40, liveDurationMs: 6000000, liveHoldSec: 600 }
   },
   {
     id: 'p0015',
@@ -245,7 +245,7 @@ export const PRODUCTS = [
     rating: 4.9,
     tags: ['Type-C', '高清', '快充'],
     desc: '数码热卖款，Type-C·高清·快充，适合日常与送礼（演示数据）。',
-    live: { livePrice: 188, liveStock: 15, liveEnd: Date.now() + 4800000, liveHoldSec: 600 }
+    live: { livePrice: 188, liveStock: 15, liveDurationMs: 4800000, liveHoldSec: 600 }
   },
   {
     id: 'p0026',
@@ -300,7 +300,7 @@ export const PRODUCTS = [
     rating: 4.9,
     tags: ['无酒精', '安全材质', '圆润不伤手'],
     desc: '母婴热卖款，无酒精·安全材质·圆润不伤手，适合日常与送礼（演示数据）。',
-    live: { livePrice: 29, liveStock: 100, liveEnd: Date.now() + 9000000, liveHoldSec: 300 }
+    live: { livePrice: 29, liveStock: 100, liveDurationMs: 9000000, liveHoldSec: 300 }
   },
   {
     id: 'p0032',
@@ -454,7 +454,7 @@ export const PRODUCTS = [
     rating: 4.8,
     tags: ['高效率', '护腰', '桌面友好'],
     desc: '办公热卖款，高效率·护腰·桌面友好，适合日常与送礼（演示数据）。',
-    live: { livePrice: 99, liveStock: 25, liveEnd: Date.now() + 4200000, liveHoldSec: 600 }
+    live: { livePrice: 99, liveStock: 25, liveDurationMs: 4200000, liveHoldSec: 600 }
   },
   {
     id: 'p0049',
